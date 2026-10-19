@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Timewise: a free task planner for days, weeks, months and years, with a monthly consistency report.">
+<title>Timewise – Task Planner</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><span class="logo" aria-hidden="true">◐</span><h1>Timewise</h1></div>
+  <nav id="tabs" aria-label="Views">
+    <button data-act="view" data-view="day">Day</button>
+    <button data-act="view" data-view="week">Week</button>
+    <button data-act="view" data-view="month">Month</button>
+    <button data-act="view" data-view="year">Year</button>
+    <button data-act="view" data-view="report">Report</button>
+  </nav>
+  <div class="tools">
+    <button class="btn" data-act="new" title="New task (N)">+ New task</button>
+    <button class="btn ghost" data-act="export" title="Download a backup of your data">Export</button>
+    <button class="btn ghost" data-act="import" title="Load a backup file">Import</button>
+    <button class="btn ghost" data-act="settings" title="Settings" aria-label="Settings">⚙</button>
+    <input type="file" id="importFile" accept="application/json,.json" hidden>
+  </div>
+</header>
+
+<main>
+  <div class="navbar" id="navbar">
+    <button class="btn ghost" data-act="prev" aria-label="Previous">‹</button>
+    <h2 id="label"></h2>
+    <button class="btn ghost" data-act="next" aria-label="Next">›</button>
+    <button class="btn" data-act="today">Today</button>
+  </div>
+  <div id="banner"></div>
+  <div id="view"></div>
+</main>
+
+<footer>
+  Your tasks are stored only in this browser. <button class="link" data-act="export">Export a backup</button> now and then, and use it to move to another device.
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="taskDialog">
+  <form id="taskForm" class="form" autocomplete="off">
+    <h2 id="taskDlgTitle">New task</h2>
+    <input type="hidden" name="taskId">
+    <label>Task
+      <input name="ttl" required maxlength="160" placeholder="What needs to be done?">
+    </label>
+    <div class="row">
+      <label>Planned for
+        <select name="scope">
+          <option value="day">A day</option>
+          <option value="week">A week</option>
+          <option value="month">A month</option>
+          <option value="year">A year</option>
+        </select>
+      </label>
+      <label>Date
+        <input type="date" name="date" required>
+      </label>
+    </div>
+    <div class="row" id="dayOnly">
+      <label>Time (optional)
+        <input type="time" name="time">
+      </label>
+      <label>Repeat
+        <select name="repeat">
+          <option value="none">Does not repeat</option>
+          <option value="daily">Every day (next 60 days)</option>
+          <option value="weekdays">Weekdays (next 12 weeks)</option>
+          <option value="weekly">Every week (next 26 weeks)</option>
+          <option value="monthly">Every month (next 12 months)</option>
+        </select>
+      </label>
+    </div>
+    <fieldset class="seg">
+      <legend>Importance</legend>
+      <label><input type="radio" name="priority" value="major"> Major</label>
+      <label><input type="radio" name="priority" value="minor" checked> Minor</label>
+    </fieldset>
+    <p class="hint">Major = moves an important goal forward, or has real consequences if skipped. Keep it to 3 a day or fewer, since everything else is minor.</p>
+    <label>Notes (optional)
+      <textarea name="notes" rows="2" maxlength="600"></textarea>
+    </label>
+    <menu>
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button class="btn primary">Save</button>
+    </menu>
+  </form>
+</dialog>
+
+<dialog id="missDialog">
+  <form id="missForm" class="form">
+    <h2>Not done: what happened?</h2>
+    <p id="missTitle" class="muted"></p>
+    <input type="hidden" name="missId">
+    <label>Reason
+      <select name="reason"></select>
+    </label>
+    <label>Details (optional)
+      <textarea name="note" rows="2" maxlength="600" placeholder="Anything worth remembering for next time?"></textarea>
+    </label>
+    <label class="check"><input type="checkbox" name="carry"> Carry it over to
+      <input type="date" name="carryDate">
+    </label>
+    <menu>
+      <button type="button" class="btn" data-close>Cancel</button>
+      <button class="btn primary">Save</button>
+    </menu>
+  </form>
+</dialog>
+
+<dialog id="delDialog">
+  <form class="form" method="dialog" id="delForm">
+    <h2>Delete this task?</h2>
+    <p id="delText" class="muted"></p>
+    <menu id="delMenu"></menu>
+  </form>
+</dialog>
+
+<dialog id="settingsDialog">
+  <form class="form" method="dialog" id="settingsForm">
+    <h2>Settings</h2>
+    <label>A day counts as "good" at this completion rate or higher (%)
+      <input type="number" name="threshold" min="10" max="100" step="5">
+    </label>
+    <label>Week starts on
+      <select name="weekStart"><option value="1">Monday</option><option value="0">Sunday</option></select>
+    </label>
+    <label>Theme
+      <select name="theme"><option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option></select>
+    </label>
+    <hr>
+    <button type="button" class="btn danger" data-act="clear">Delete all my data</button>
+    <menu><button class="btn primary">Done</button></menu>
+  </form>
+</dialog>
+
+<script src="app.js" defer></script>
+</body>
+</html>
